@@ -1,0 +1,22 @@
+DROP TABLE IF EXISTS Country;
+  
+CREATE TABLE Country (
+  CountryId INT AUTO_INCREMENT  PRIMARY KEY,
+  Name VARCHAR(100) NOT NULL,
+  Population DOUBLE NOT NULL,
+  Continent VARCHAR(250) NOT NULL
+ );
+ 
+ 
+ DROP TABLE IF EXISTS City;
+  
+CREATE TABLE City (
+  CityId INT AUTO_INCREMENT  PRIMARY KEY,
+  Name VARCHAR(100) NOT NULL,
+  CountryId INT NOT NULL,
+  Capital INT NOT NULL,
+  FirstLandmark VARCHAR(250) NOT NULL,
+  SecondLandmark VARCHAR(250) NOT NULL,
+  ThirdLandmark VARCHAR(250) NOT NULL
+  );
+
