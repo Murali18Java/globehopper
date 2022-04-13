@@ -1,15 +1,12 @@
-version: '2.2'
+version: '3'
 services:
-  globehopper:
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    image: globehopperspringdata
+  web:
+    image: 540451631109.dkr.ecr.us-east-1.amazonaws.com/jenkins-ecr-cicd:latest
     ports:
-      - 8085
-    networks:
-      - network1
-    scale: 3
-
-networks:
-  network1:
+      - "8085:8085"
+    logging:
+      driver: awslogs
+      options: 
+        awslogs-group: ec2-tutorial
+        awslogs-region: us-east-1
+        awslogs-stream-prefix: web
