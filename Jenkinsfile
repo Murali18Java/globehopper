@@ -1,41 +1,36 @@
-pipeline{
-
-	agent any
-
-	environment {
-		DOCKERHUB_CREDENTIALS=credentials('dockerhub-credentials')
-	}
-
-	stages {
-
-		stage('Build') {
-
-			steps {
-				sh 'docker build -t jenkins-cicd-new:1.5 .'
-			}
-		}
-
-		stage('Login') {
-
-			steps {
-
-				sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
-			}
-		}
-
-		stage('Push') {
-
-			steps {
-                sh 'docker tag docker-jenkins-cicd:1.5 $DOCKERHUB_CREDENTIALS_USR/jenkins-cicd-new:1.5'
-				sh 'docker push $DOCKERHUB_CREDENTIALS_USR/jenkins-cicd-new:1.5'
-			}
-		}
-	}
-
-	post {
-		always {
-			sh 'docker logout'
-		}
-	}
-
+pipeline {
+  environment {
+    registry = '540451631109.dkr.ecr.us-east-1.amazonaws.com/jenkins-cicd-new'
+    registryCredential = 'aws-ecr-credentials'
+    dockerImage = ''
+  }
+  agent any
+  stages {
+    stage('Building image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":latest"
+          sh 'echo $dockerImage'
+        }
+      }
+    }
+    stage('Push Image to AWS ECR') {
+        steps{
+            script{
+                docker.withRegistry("https://" + registry, "ecr:us-east-1:" + registryCredential) {
+                    dockerImage.push()
+                }
+            }
+        }
+    }
+    
+    stage('Deploy docker image to AWS ECS container') {
+            steps {
+                withAWS(credentials: 'aws-ecr-credentials', region: 'us-east-1') {
+                  sh "chmod +x ./jenkins_ecr.sh"
+                  sh "./jenkins_ecr.sh"
+                }
+            }
+        }
+    }
 }
