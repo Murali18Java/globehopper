@@ -11,7 +11,7 @@ pipeline{
 		stage('Build') {
 
 			steps {
-				sh 'docker build -t docker-jenkins-cicd:1.5 .'
+				sh 'docker build -t jenkins-cicd-new:1.5 .'
 			}
 		}
 
@@ -26,8 +26,8 @@ pipeline{
 		stage('Push') {
 
 			steps {
-                sh 'docker tag docker-jenkins-cicd:1.5 $DOCKERHUB_CREDENTIALS_USR/docker-jenkins-cicd:1.5'
-				sh 'docker push $DOCKERHUB_CREDENTIALS_USR/docker-jenkins-cicd:1.5'
+                sh 'docker tag docker-jenkins-cicd:1.5 $DOCKERHUB_CREDENTIALS_USR/jenkins-cicd-new:1.5'
+				sh 'docker push $DOCKERHUB_CREDENTIALS_USR/jenkins-cicd-new:1.5'
 			}
 		}
 	}
