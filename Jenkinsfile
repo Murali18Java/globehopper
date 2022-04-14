@@ -10,15 +10,13 @@ pipeline {
         jdk "JDK"
     }
   stages {
-
-        stage('Build') {
+      stage('Build') {
             steps {
-                             {
-              git branch: 'main', url: 'https://github.com/Murali18Java/globehopper.git'
-              script {
+                git branch: 'main', url: 'https://github.com/Murali18Java/globehopper.git'
+                script {
                   def pom = readMavenPom file: 'pom.xml'
                   version = pom.version
-              }
+                }
                 dir("/var/lib/jenkins/workspace/demopipelinetask") {
                 sh 'mvn -B -DskipTests clean package'
                 }
