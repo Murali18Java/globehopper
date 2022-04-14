@@ -16,7 +16,7 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
                 }
             }
-        }
+        
     stage('Building image') {
       steps{
         script {
